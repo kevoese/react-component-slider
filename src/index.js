@@ -9,7 +9,8 @@ class ReactSlider extends Component {
     currentPage: 0,
     percent: 50,
     length: 0,
-    direction: "forwards"
+    direction: "forwards",
+    intervalDelay: null,
   };
 
   sliderRef = createRef();
@@ -51,6 +52,7 @@ class ReactSlider extends Component {
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.setUpSlider);
+    this.props.autoMode && clearInterval(this.state.intervalDelay)
   }
 
   handleNext = () => {
@@ -70,7 +72,7 @@ class ReactSlider extends Component {
   };
 
   setAnimationMode() {
-    setInterval(() => {
+   const intervalDelay = setInterval(() => {
       if (this.state.currentPage === 0) {
         this.setState({
           direction: "forwards"
@@ -83,6 +85,9 @@ class ReactSlider extends Component {
       if (this.state.direction === "forwards") this.handleNext();
       else this.handlePrev();
     }, this.props.autoModeDelayTime * 1000 || 4000);
+    this.setState({
+      intervalDelay
+    })
   }
 
   render() {
